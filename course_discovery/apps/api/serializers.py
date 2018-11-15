@@ -286,6 +286,7 @@ class MinimalPersonSerializer(serializers.ModelSerializer):
             PersonSocialNetwork.FACEBOOK: self.get_social_network_url(PersonSocialNetwork.FACEBOOK, obj),
             PersonSocialNetwork.TWITTER: self.get_social_network_url(PersonSocialNetwork.TWITTER, obj),
             PersonSocialNetwork.BLOG: self.get_social_network_url(PersonSocialNetwork.BLOG, obj),
+            PersonSocialNetwork.OTHERS: self.get_social_network_url(PersonSocialNetwork.OTHERS, obj),
         }
 
     def get_email(self, _obj):
@@ -318,7 +319,10 @@ class PersonSerializer(MinimalPersonSerializer):
         Position.objects.create(person=person, **position_data)
 
         person_social_networks = []
-        for url_type in [PersonSocialNetwork.FACEBOOK, PersonSocialNetwork.TWITTER, PersonSocialNetwork.BLOG]:
+        for url_type in [
+            PersonSocialNetwork.FACEBOOK, PersonSocialNetwork.TWITTER,
+            PersonSocialNetwork.BLOG, PersonSocialNetwork.OTHERS,
+        ]:
             value = urls_data.get(url_type)
             if value:
                 person_social_networks.append(PersonSocialNetwork(person=person, type=url_type, value=value))
@@ -332,7 +336,10 @@ class PersonSerializer(MinimalPersonSerializer):
 
         Position.objects.update_or_create(person=instance, defaults=position_data)
 
-        for url_type in [PersonSocialNetwork.FACEBOOK, PersonSocialNetwork.TWITTER, PersonSocialNetwork.BLOG]:
+        for url_type in [
+            PersonSocialNetwork.FACEBOOK, PersonSocialNetwork.TWITTER,
+            PersonSocialNetwork.BLOG, PersonSocialNetwork.OTHERS,
+        ]:
             value = urls_data.get(url_type)
             if value:
                 network, __ = PersonSocialNetwork.objects.get_or_create(person=instance, type=url_type)

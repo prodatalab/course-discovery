@@ -65,7 +65,7 @@ class PersonViewSetTests(SerializationMixin, APITestCase):
         self.assertEqual(person.major_works, data['major_works'])
         self.assertEqual(
             sorted([social.value for social in person.person_networks.all()]),
-            sorted([data['urls']['facebook'], data['urls']['twitter'], data['urls']['blog']])
+            sorted([data['urls']['facebook'], data['urls']['twitter'], data['urls']['blog'], data['urls']['others']])
         )
 
     def test_create_without_drupal_client_settings(self):
@@ -232,7 +232,8 @@ class PersonViewSetTests(SerializationMixin, APITestCase):
             'urls': {
                 'facebook': 'http://www.facebook.com/hopkins',
                 'twitter': 'http://www.twitter.com/hopkins',
-                'blog': 'http://www.blog.com/hopkins'
+                'blog': 'http://www.blog.com/hopkins',
+                'others': 'http://www.others.com/hopkins',
             },
         }
 
@@ -249,6 +250,7 @@ class PersonViewSetTests(SerializationMixin, APITestCase):
             'urls': {
                 'facebook': 'http://www.facebook.com/new',
                 'twitter': 'http://www.twitter.com/new',
+                'others': 'http://www.others.com/new',
             },
         }
 
@@ -321,6 +323,7 @@ class PersonViewSetTests(SerializationMixin, APITestCase):
         self.assertEqual(updated_person.person_networks.get(type='facebook').value, data['urls']['facebook'])
         self.assertEqual(updated_person.person_networks.get(type='twitter').value, data['urls']['twitter'])
         self.assertFalse(updated_person.person_networks.filter(type='blog').exists())
+        self.assertEqual(updated_person.person_networks.get(type='others').value, data['urls']['others'])
 
     def test_update_without_position(self):
         """

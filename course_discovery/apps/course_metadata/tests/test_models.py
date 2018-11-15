@@ -514,7 +514,7 @@ class PersonTests(TestCase):
         Verify that property returns profile_image_url if profile_image_url
         exists other wise it returns uploaded image url.
         """
-        self.assertEqual(self.person.get_profile_image_url, self.person.profile_image.url)
+        self.assertEqual(self.person.get_profile_image_url, self.person.profile_image_url)
 
         # create another person with out profile_image_url
         person = factories.PersonFactory(profile_image_url=None)

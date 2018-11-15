@@ -45,6 +45,7 @@ $(document).ready(function(){
         assignData('.facebook_url', data['social_networks']['facebook']);
         assignData('.twitter_url', data['social_networks']['twitter']);
         assignData('.blog_url', data['social_networks']['blog']);
+        assignData('.others_url', data['social_networks']['others']);
 
     });
 });
@@ -84,6 +85,7 @@ function resetModalData() {
     assignData('.twitter_url', '#');
     assignData('.profile_url', '#');
     assignData('.blog_url', '#');
+    assignData('.others_url', '#');
 }
 
 function assignData(element, data){
@@ -93,7 +95,10 @@ function assignData(element, data){
 
 function resetInstructorModalData() {
     var imgPath = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
-    selectors = ['#given-name', '#family-name', '#title', '#email', '#bio', '#facebook', '#twitter', '#blog', '#majorWorks'];
+    selectors = [
+        '#given-name', '#family-name', '#title', '#email','#bio', '#facebook',
+        '#twitter', '#blog', '#others', '#majorWorks',
+    ];
     $('#addInstructorModal div img').attr('src',imgPath);
     for (var i in selectors) clearData(selectors[i]);
 }

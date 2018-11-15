@@ -1277,14 +1277,15 @@ class MinimalPersonSerializerTests(TestCase):
             'family_name': self.person.family_name,
             'bio': self.person.bio,
             'profile_image': image_field.to_representation(self.person.profile_image),
-            'profile_image_url': self.person.profile_image.url,
+            'profile_image_url': self.person.profile_image_url,
             'position': PositionSerializer(position).data,
             'works': [],
             'major_works': self.person.major_works,
             'urls': {
                 'facebook': None,
                 'twitter': None,
-                'blog': None
+                'blog': None,
+                'others': None,
             },
             'slug': self.person.slug,
             'email': None,  # always None
@@ -1546,14 +1547,15 @@ class PersonSearchModelSerializerTests(PersonSearchSerializerTest):
             'family_name': person.family_name,
             'bio': person.bio,
             'profile_image': image_field.to_representation(person.profile_image),
-            'profile_image_url': person.profile_image.url,
+            'profile_image_url': person.profile_image_url,
             'position': PositionSerializer(person.position).data,
             'works': [],
             'major_works': person.major_works,
             'urls': {
                 'facebook': None,
                 'twitter': None,
-                'blog': None
+                'blog': None,
+                'others': None,
             },
             'slug': person.slug,
             'email': None,  # always None

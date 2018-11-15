@@ -18,14 +18,14 @@
             </div>
             <div class="copy full_name"></div>
         </div>
-        
+
         <div class="info-item">
             <div class="heading">{% trans "Email" %}:
                 {% include "publisher/course_run_detail/_clipboard.html" %}
             </div>
             <div class="copy email"></div>
         </div>
-        
+
         <div class="info-item">
             <div class="heading">{% trans "Organization" %}
                 {% include "publisher/course_run_detail/_clipboard.html" %}
@@ -72,6 +72,12 @@
                 <a class="blog_url" target="_blank">{% trans "Blog URL "%}</a>
                 {% include "publisher/course_run_detail/_clipboard.html" %}
                 <div class="copy blog_url_copy hidden"></div>
+            </div>
+
+            <div class="heading icon">
+                <a class="others_url" target="_blank">{% trans "Other URL "%}</a>
+                {% include "publisher/course_run_detail/_clipboard.html" %}
+                <div class="copy others_url_copy hidden"></div>
             </div>
         </div>
 

@@ -52,7 +52,8 @@ $(document).ready(function () {
             'urls': {
                 facebook: $('#facebook').val(),
                 twitter: $('#twitter').val(),
-                blog: $('#blog').val()
+                blog: $('#blog').val(),
+                others: $('#others').val(),
             }
         };
 
@@ -84,6 +85,7 @@ $(document).ready(function () {
                 $('#facebook').val('');
                 $('#twitter').val('');
                 $('#blog').val('');
+                $('#others').val('')
                 clearModalError();
                 closeModal(e, $('#addInstructorModal'));
                 if (editMode) {
@@ -297,6 +299,7 @@ $(document).on('click', '.selected-instructor a.edit', function (e) {
             $('#facebook').val(data['urls']['facebook']);
             $('#twitter').val(data['urls']['twitter']);
             $('#blog').val(data['urls']['blog']);
+            $('#others').val(data['urls']['others']);
         }
     });
 });
