@@ -361,9 +361,10 @@ class PersonMarketingSiteDataLoader(AbstractMarketingSiteDataLoader):
                         defaults = {'value': url}
                         PersonSocialNetwork.objects.update_or_create(person=person, type=link_type, defaults=defaults)
         except Exception:  # pylint: disable=broad-except
-            logger.error(
-                'Failed to set social network for person with UUID [{uuid}] due to malformed URL '
-                '[{url}].'.format(uuid=uuid, url=url)
+            logger.exception(
+                'Failed to set social network for person with UUID [{uuid}] and url [{url}].'.format(
+                    uuid=uuid, url=url
+                )
             )
 
 
