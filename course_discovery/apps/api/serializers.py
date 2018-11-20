@@ -321,23 +321,22 @@ class PersonSerializer(MinimalPersonSerializer):
     def validate(self, data):
         validated_data = super(PersonSerializer, self).validate(data)
         validated_data['urls'] = self.initial_data.get('urls')
+        validated_data['urls_detailed'] = self.initial_data.get('urls_detailed')
         return validated_data
 
     def create(self, validated_data):
         position_data = validated_data.pop('position')
         urls_data = validated_data.pop('urls', {})
+        urls_detailed_data = validated_data.pop('urls_detailed', [])
 
         person = Person.objects.create(**validated_data)
         Position.objects.create(person=person, **position_data)
 
         person_social_networks = []
-        for url_type in [
-            PersonSocialNetwork.FACEBOOK, PersonSocialNetwork.TWITTER,
-            PersonSocialNetwork.BLOG, PersonSocialNetwork.OTHERS,
-        ]:
-            value = urls_data.get(url_type)
-            if value:
-                person_social_networks.append(PersonSocialNetwork(person=person, type=url_type, value=value))
+        for url_detailed in urls_detailed_data:
+            person_social_networks.append(PersonSocialNetwork(
+                person=person, type=url_detailed['type'], title=url_detailed['title'], url=url_detailed['url'],
+            ))
         PersonSocialNetwork.objects.bulk_create(person_social_networks)
 
         return person
@@ -345,20 +344,22 @@ class PersonSerializer(MinimalPersonSerializer):
     def update(self, instance, validated_data):
         position_data = validated_data.pop('position')
         urls_data = validated_data.pop('urls', {})
+        urls_detailed_data = validated_data.pop('urls_detailed', [])
 
         Position.objects.update_or_create(person=instance, defaults=position_data)
 
-        for url_type in [
-            PersonSocialNetwork.FACEBOOK, PersonSocialNetwork.TWITTER,
-            PersonSocialNetwork.BLOG, PersonSocialNetwork.OTHERS,
-        ]:
-            value = urls_data.get(url_type)
-            if value:
-                network, __ = PersonSocialNetwork.objects.get_or_create(person=instance, type=url_type)
-                network.value = value
+        for url_detailed in urls_detailed_data:
+            url = url_detailed.get('url')
+            if url:
+                network, __ = PersonSocialNetwork.objects.get_or_create(
+                    person=instance, type=url_detailed['type'], title=url_detailed['title'],
+                )
+                network.url = url_detailed['url']
                 network.save()
             else:
-                PersonSocialNetwork.objects.filter(person=instance, type=url_type).delete()
+                PersonSocialNetwork.objects.filter(
+                    person=instance, type=url_detailed['type'], title=url_detailed['title'],
+                ).delete()
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)

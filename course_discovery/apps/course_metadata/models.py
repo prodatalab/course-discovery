@@ -1670,7 +1670,7 @@ class PersonSocialNetwork(TimeStampedModel):
         ordering = ['created']
 
     def __str__(self):
-        return '{type}: {url}'.format(type=self.type, value=self.url)
+        return '{type}: {url}'.format(type=self.type, url=self.url)
 
 
 class PersonWork(AbstractValueModel):
