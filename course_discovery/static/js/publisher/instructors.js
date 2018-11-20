@@ -49,11 +49,23 @@ $(document).ready(function () {
             'profile_image': $('.select-image').attr('src'),
             'position': getFormInstructorPosition(),
             'major_works': $('#majorWorks').val(),
-            'urls': {
-                facebook: $('#facebook').val(),
-                twitter: $('#twitter').val(),
-                blog: $('#blog').val(),
-            }
+            'urls_detailed': [
+                {
+                    type: 'facebook',
+                    title: null,
+                    url: $('#facebook').val(),
+                },
+                {
+                    type: 'twitter',
+                    title: null,
+                    url: $('#twitter').val(),
+                },
+                {
+                    type: 'blog',
+                    title: null,
+                    url: $('#blog').val(),
+                },
+            ],
         };
 
         if (editMode) {
@@ -294,9 +306,15 @@ $(document).on('click', '.selected-instructor a.edit', function (e) {
             $('#email').val(data['email']);
             $('#bio').val(data['bio']);
             $('#majorWorks').val(data['major_works']);
-            $('#facebook').val(data['urls']['facebook']);
-            $('#twitter').val(data['urls']['twitter']);
-            $('#blog').val(data['urls']['blog']);
+            for (var i = 0; i < data['urls_detailed'].length; i++) {
+                if (data['urls_detailed'][i]['type'] == 'facebook') {
+                    $('#facebook').val(data['urls_detailed'][i]['url']);
+                } else if (data['urls_detailed'][i]['type'] == 'twitter') {
+                    $('#twitter').val(data['urls_detailed'][i]['url']);
+                } else if (data['urls_detailed'][i]['type'] == 'blog') {
+                    $('#blog').val(data['urls_detailed'][i]['url']);
+                }
+            }
         }
     });
 });

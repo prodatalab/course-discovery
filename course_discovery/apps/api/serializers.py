@@ -334,9 +334,10 @@ class PersonSerializer(MinimalPersonSerializer):
 
         person_social_networks = []
         for url_detailed in urls_detailed_data:
-            person_social_networks.append(PersonSocialNetwork(
-                person=person, type=url_detailed['type'], title=url_detailed['title'], url=url_detailed['url'],
-            ))
+            if url_detailed['url']:
+                person_social_networks.append(PersonSocialNetwork(
+                    person=person, type=url_detailed['type'], title=url_detailed['title'], url=url_detailed['url'],
+                ))
         PersonSocialNetwork.objects.bulk_create(person_social_networks)
 
         return person
@@ -350,11 +351,13 @@ class PersonSerializer(MinimalPersonSerializer):
 
         PersonSocialNetwork.objects.filter(person=instance).delete()
         for url_detailed in urls_detailed_data:
-            network, __ = PersonSocialNetwork.objects.get_or_create(
-                person=instance, type=url_detailed['type'], title=url_detailed['title'],
-            )
-            network.url = url_detailed['url']
-            network.save()
+            url = url_detailed['url']
+            if url:
+                network, __ = PersonSocialNetwork.objects.get_or_create(
+                    person=instance, type=url_detailed['type'], title=url_detailed['title'],
+                )
+                network.url = url
+                network.save()
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
