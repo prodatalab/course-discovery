@@ -86,30 +86,6 @@ class AbstractTitleDescriptionModel(TimeStampedModel):
         abstract = True
 
 
-class AbstractSocialNetworkModel(TimeStampedModel):
-    """ SocialNetwork model. """
-    FACEBOOK = 'facebook'
-    TWITTER = 'twitter'
-    BLOG = 'blog'
-    OTHERS = 'others'
-
-    SOCIAL_NETWORK_CHOICES = (
-        (FACEBOOK, _('Facebook')),
-        (TWITTER, _('Twitter')),
-        (BLOG, _('Blog')),
-        (OTHERS, _('Others')),
-    )
-
-    type = models.CharField(max_length=15, choices=SOCIAL_NETWORK_CHOICES, db_index=True)
-    value = models.CharField(max_length=500)
-
-    def __str__(self):
-        return '{type}: {value}'.format(type=self.type, value=self.value)
-
-    class Meta(object):
-        abstract = True
-
-
 class Image(AbstractMediaModel):
     """ Image model. """
     height = models.IntegerField(null=True, blank=True)
@@ -315,7 +291,7 @@ class Person(TimeStampedModel):
         return self.full_name
 
     def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
-        logger.info('Person saved UUID: %s', self.uuid, exc_info=True)
+        # logger.info('Person saved UUID: %s', self.uuid, exc_info=True)
         super(Person, self).save(*args, **kwargs)
 
     @property
@@ -1666,30 +1642,35 @@ class Pathway(TimeStampedModel):
             raise ValidationError(msg.format(', '.join(bad_programs)))  # pylint: disable=no-member
 
 
-class PersonSocialNetwork(AbstractSocialNetworkModel):
+class PersonSocialNetwork(TimeStampedModel):
     """ Person Social Network model. """
+    FACEBOOK = 'facebook'
+    TWITTER = 'twitter'
+    BLOG = 'blog'
+    OTHERS = 'others'
+
+    SOCIAL_NETWORK_CHOICES = (
+        (FACEBOOK, _('Facebook')),
+        (TWITTER, _('Twitter')),
+        (BLOG, _('Blog')),
+        (OTHERS, _('Others')),
+    )
+
+    type = models.CharField(max_length=15, choices=SOCIAL_NETWORK_CHOICES, db_index=True)
+    url = models.CharField(max_length=500)
+    title = models.CharField(max_length=255, null=True)
     person = models.ForeignKey(Person, related_name='person_networks')
 
     class Meta(object):
         verbose_name_plural = 'Person SocialNetwork'
 
         unique_together = (
-            ('person', 'type'),
+            ('person', 'type', 'title'),
         )
         ordering = ['created']
 
-
-class CourseRunSocialNetwork(AbstractSocialNetworkModel):
-    """ CourseRun Social Network model. """
-    course_run = models.ForeignKey(CourseRun, related_name='course_run_networks')
-
-    class Meta(object):
-        verbose_name_plural = 'CourseRun SocialNetwork'
-
-        unique_together = (
-            ('course_run', 'type'),
-        )
-        ordering = ['created']
+    def __str__(self):
+        return '{type}: {url}'.format(type=self.type, value=self.url)
 
 
 class PersonWork(AbstractValueModel):

@@ -252,6 +252,7 @@ class MinimalPersonSerializer(serializers.ModelSerializer):
     profile_image = StdImageSerializerField(required=False)
     works = serializers.SerializerMethodField()
     urls = serializers.SerializerMethodField()
+    urls_detailed = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
 
     @classmethod
@@ -264,7 +265,7 @@ class MinimalPersonSerializer(serializers.ModelSerializer):
         model = Person
         fields = (
             'uuid', 'salutation', 'given_name', 'family_name', 'bio', 'slug', 'position',
-            'profile_image', 'partner', 'works', 'urls', 'email', 'profile_image_url', 'major_works',
+            'profile_image', 'partner', 'works', 'urls', 'urls_detailed', 'email', 'profile_image_url', 'major_works',
         )
         extra_kwargs = {
             'partner': {'write_only': True}
@@ -279,7 +280,7 @@ class MinimalPersonSerializer(serializers.ModelSerializer):
         social_networks = [network for network in obj.person_networks.all() if network.type == url_type]
 
         if social_networks:
-            return social_networks[0].value
+            return social_networks[0].url
 
     def get_urls(self, obj):
         return {
@@ -288,6 +289,17 @@ class MinimalPersonSerializer(serializers.ModelSerializer):
             PersonSocialNetwork.BLOG: self.get_social_network_url(PersonSocialNetwork.BLOG, obj),
             PersonSocialNetwork.OTHERS: self.get_social_network_url(PersonSocialNetwork.OTHERS, obj),
         }
+
+    def get_urls_detailed(self, obj):
+        urls_detailed = []
+        for network in obj.person_networks.all():
+            url_detailed = {
+                'type': network.type,
+                'title': network.title,
+                'url': network.url,
+            }
+            urls_detailed.append(url_detailed)
+        return urls_detailed
 
     def get_email(self, _obj):
         # For historical reasons, we provide this field. But for privacy reasons, we don't provide a value in this
