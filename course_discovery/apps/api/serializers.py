@@ -320,13 +320,11 @@ class PersonSerializer(MinimalPersonSerializer):
 
     def validate(self, data):
         validated_data = super(PersonSerializer, self).validate(data)
-        validated_data['urls'] = self.initial_data.get('urls')
         validated_data['urls_detailed'] = self.initial_data.get('urls_detailed')
         return validated_data
 
     def create(self, validated_data):
         position_data = validated_data.pop('position')
-        urls_data = validated_data.pop('urls', {})
         urls_detailed_data = validated_data.pop('urls_detailed', [])
 
         person = Person.objects.create(**validated_data)
@@ -344,7 +342,6 @@ class PersonSerializer(MinimalPersonSerializer):
 
     def update(self, instance, validated_data):
         position_data = validated_data.pop('position')
-        urls_data = validated_data.pop('urls', {})
         urls_detailed_data = validated_data.pop('urls_detailed', [])
 
         Position.objects.update_or_create(person=instance, defaults=position_data)

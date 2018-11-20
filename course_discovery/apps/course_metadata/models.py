@@ -1658,7 +1658,7 @@ class PersonSocialNetwork(TimeStampedModel):
 
     type = models.CharField(max_length=15, choices=SOCIAL_NETWORK_CHOICES, db_index=True)
     url = models.CharField(max_length=500)
-    title = models.CharField(max_length=255, null=True)
+    title = models.CharField(max_length=255, blank=True)
     person = models.ForeignKey(Person, related_name='person_networks')
 
     class Meta(object):
