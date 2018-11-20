@@ -348,18 +348,13 @@ class PersonSerializer(MinimalPersonSerializer):
 
         Position.objects.update_or_create(person=instance, defaults=position_data)
 
+        PersonSocialNetwork.objects.filter(person=instance).delete()
         for url_detailed in urls_detailed_data:
-            url = url_detailed.get('url')
-            if url:
-                network, __ = PersonSocialNetwork.objects.get_or_create(
-                    person=instance, type=url_detailed['type'], title=url_detailed['title'],
-                )
-                network.url = url_detailed['url']
-                network.save()
-            else:
-                PersonSocialNetwork.objects.filter(
-                    person=instance, type=url_detailed['type'], title=url_detailed['title'],
-                ).delete()
+            network, __ = PersonSocialNetwork.objects.get_or_create(
+                person=instance, type=url_detailed['type'], title=url_detailed['title'],
+            )
+            network.url = url_detailed['url']
+            network.save()
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
