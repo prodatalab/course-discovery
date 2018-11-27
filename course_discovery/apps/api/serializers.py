@@ -295,7 +295,7 @@ class MinimalPersonSerializer(serializers.ModelSerializer):
         for network in obj.person_networks.all():
             url_detailed = {
                 'type': network.type,
-                'title': network.title,
+                'title': network.display_title,
                 'url': network.url,
             }
             urls_detailed.append(url_detailed)

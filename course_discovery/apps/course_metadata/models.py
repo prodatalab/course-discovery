@@ -1672,6 +1672,17 @@ class PersonSocialNetwork(TimeStampedModel):
     def __str__(self):
         return '{type}: {url}'.format(type=self.type, url=self.url)
 
+    @property
+    def display_title(self):
+        if self.title:
+            return self.title
+        else:
+            if self.type == self.OTHERS:
+                return self.url
+            else:
+                return _(self.type.capitalize())
+
+
 
 class PersonWork(AbstractValueModel):
     """ Person Works model. """
